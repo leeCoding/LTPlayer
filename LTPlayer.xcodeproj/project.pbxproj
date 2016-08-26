@@ -1,0 +1,322 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FB3462D61D378358005735EC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3462D51D378358005735EC /* main.m */; };
+		FB3462D91D378358005735EC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3462D81D378358005735EC /* AppDelegate.m */; };
+		FB3462DC1D378358005735EC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3462DB1D378358005735EC /* ViewController.m */; };
+		FB3462DF1D378358005735EC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB3462DD1D378358005735EC /* Main.storyboard */; };
+		FB3462E11D378358005735EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB3462E01D378358005735EC /* Assets.xcassets */; };
+		FB3462E41D378358005735EC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB3462E21D378358005735EC /* LaunchScreen.storyboard */; };
+		FB3462EF1D38C954005735EC /* UIView+Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3462EE1D38C953005735EC /* UIView+Layout.m */; };
+		FBC8FB181D6EEF2B002B972E /* LTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = FBC8FB171D6EEF2B002B972E /* LTPlayerView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		FB3462D11D378358005735EC /* LTPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LTPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB3462D51D378358005735EC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		FB3462D71D378358005735EC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		FB3462D81D378358005735EC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		FB3462DA1D378358005735EC /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		FB3462DB1D378358005735EC /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		FB3462DE1D378358005735EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		FB3462E01D378358005735EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FB3462E31D378358005735EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		FB3462E51D378358005735EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB3462ED1D38C953005735EC /* UIView+Layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Layout.h"; sourceTree = "<group>"; };
+		FB3462EE1D38C953005735EC /* UIView+Layout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Layout.m"; sourceTree = "<group>"; };
+		FBC8FB161D6EEF2B002B972E /* LTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LTPlayerView.h; sourceTree = "<group>"; };
+		FBC8FB171D6EEF2B002B972E /* LTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LTPlayerView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FB3462CE1D378358005735EC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FB3462C81D378358005735EC = {
+			isa = PBXGroup;
+			children = (
+				FB3462D31D378358005735EC /* LTPlayer */,
+				FB3462D21D378358005735EC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FB3462D21D378358005735EC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FB3462D11D378358005735EC /* LTPlayer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FB3462D31D378358005735EC /* LTPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				FB3462ED1D38C953005735EC /* UIView+Layout.h */,
+				FB3462EE1D38C953005735EC /* UIView+Layout.m */,
+				FB3462D71D378358005735EC /* AppDelegate.h */,
+				FB3462D81D378358005735EC /* AppDelegate.m */,
+				FBC8FB161D6EEF2B002B972E /* LTPlayerView.h */,
+				FBC8FB171D6EEF2B002B972E /* LTPlayerView.m */,
+				FB3462DA1D378358005735EC /* ViewController.h */,
+				FB3462DB1D378358005735EC /* ViewController.m */,
+				FB3462DD1D378358005735EC /* Main.storyboard */,
+				FB3462E01D378358005735EC /* Assets.xcassets */,
+				FB3462E21D378358005735EC /* LaunchScreen.storyboard */,
+				FB3462E51D378358005735EC /* Info.plist */,
+				FB3462D41D378358005735EC /* Supporting Files */,
+			);
+			path = LTPlayer;
+			sourceTree = "<group>";
+		};
+		FB3462D41D378358005735EC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FB3462D51D378358005735EC /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FB3462D01D378358005735EC /* LTPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FB3462E81D378358005735EC /* Build configuration list for PBXNativeTarget "LTPlayer" */;
+			buildPhases = (
+				FB3462CD1D378358005735EC /* Sources */,
+				FB3462CE1D378358005735EC /* Frameworks */,
+				FB3462CF1D378358005735EC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LTPlayer;
+			productName = LTPlayer;
+			productReference = FB3462D11D378358005735EC /* LTPlayer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FB3462C91D378358005735EC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = Jonny;
+				TargetAttributes = {
+					FB3462D01D378358005735EC = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+				};
+			};
+			buildConfigurationList = FB3462CC1D378358005735EC /* Build configuration list for PBXProject "LTPlayer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FB3462C81D378358005735EC;
+			productRefGroup = FB3462D21D378358005735EC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FB3462D01D378358005735EC /* LTPlayer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FB3462CF1D378358005735EC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB3462E41D378358005735EC /* LaunchScreen.storyboard in Resources */,
+				FB3462E11D378358005735EC /* Assets.xcassets in Resources */,
+				FB3462DF1D378358005735EC /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FB3462CD1D378358005735EC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB3462EF1D38C954005735EC /* UIView+Layout.m in Sources */,
+				FB3462DC1D378358005735EC /* ViewController.m in Sources */,
+				FBC8FB181D6EEF2B002B972E /* LTPlayerView.m in Sources */,
+				FB3462D91D378358005735EC /* AppDelegate.m in Sources */,
+				FB3462D61D378358005735EC /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		FB3462DD1D378358005735EC /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FB3462DE1D378358005735EC /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		FB3462E21D378358005735EC /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FB3462E31D378358005735EC /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		FB3462E61D378358005735EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FB3462E71D378358005735EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FB3462E91D378358005735EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = LTPlayer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = www.zubmo.com.LTPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		FB3462EA1D378358005735EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = LTPlayer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = www.zubmo.com.LTPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FB3462CC1D378358005735EC /* Build configuration list for PBXProject "LTPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB3462E61D378358005735EC /* Debug */,
+				FB3462E71D378358005735EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FB3462E81D378358005735EC /* Build configuration list for PBXNativeTarget "LTPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB3462E91D378358005735EC /* Debug */,
+				FB3462EA1D378358005735EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FB3462C91D378358005735EC /* Project object */;
+}
