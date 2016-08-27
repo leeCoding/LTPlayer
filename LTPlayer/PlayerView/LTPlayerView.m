@@ -35,6 +35,7 @@
 @property (nonatomic,copy)NSString *videoUrl;               ///< 视屏播放URL
 @property (nonatomic,strong)UIView *actionBarView;          ///< 底部操作栏
 @property (nonatomic,strong)UIButton *fullBtn;              ///< 全屏按钮
+@property (nonatomic,strong)UIView *transparentView;        ///< 操作层
 
 @end
 
@@ -56,10 +57,16 @@
         self.backgroundColor = [UIColor whiteColor];
         self.videoUrl = URL;
         
+        [self ininData];
         [self steupUI];
     }
     
     return self;
+}
+
+#pragma mark - 初始化数据
+- (void)ininData {
+    
 }
 
 - (void)steupUI {
@@ -73,6 +80,15 @@
     self.actionBarView.backgroundColor = [UIColor whiteColor];
     self.actionBarView.alpha = 0.5;
     [self.playerView addSubview:self.actionBarView];
+    
+    // 全屏操作
+    self.transparentView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Video_W, Video_H - 40)];
+//    self.transparentView.backgroundColor = [UIColor yellowColor];
+    [self addSubview:self.transparentView];
+    
+    // 点击屏幕暂停
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(stopVideo)];
+    [self.transparentView addGestureRecognizer:tap];
     
     // 暂停
     self.stopBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -149,8 +165,55 @@
     
     //播放结束通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+    
+    [self hideActionBarView];
 }
 
+#pragma mark - 隐藏底部操作栏
+- (void)hideActionBarView {
+    
+    __weak typeof(self) __weakSelf = self;
+    // 等待两秒隐藏
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [UIView  animateWithDuration:0.5 animations:^{
+            
+            // 如果选择了全屏按钮
+            if (__weakSelf.fullBtn.selected) {
+                
+                __weakSelf.actionBarView.frame = CGRectMake(0, kScreenWidth, kScreenHeight, 40);
+
+            } else {
+                
+                __weakSelf.actionBarView.frame = CGRectMake(0, Video_H, Video_W, 40);
+            }
+            
+        }];;
+    });
+}
+
+#pragma mark - 显示底部操作栏
+- (void)showActionBarView {
+    
+    __weak typeof(self) __weakSelf = self;
+
+    [UIView  animateWithDuration:0.5 animations:^{
+        
+        // 如果选择了全屏按钮
+        if (__weakSelf.fullBtn.selected) {
+            
+            __weakSelf.actionBarView.frame = CGRectMake(0, kScreenWidth - 40, kScreenHeight, 40);
+            
+            
+        } else {
+            
+            __weakSelf.actionBarView.frame = CGRectMake(0, Video_H - 40, Video_W, 40);
+        }
+        
+    }];
+    
+    [self hideActionBarView];
+}
 #pragma mark - 快进快退
 - (void)forwardAndRefund:(UISlider *)slider {
     
@@ -213,10 +276,16 @@
             __weakSelf.actionBarView.transform = CGAffineTransformMakeRotation((0.0f * M_PI) / 180.0f);
             __weakSelf.actionBarView.frame = CGRectMake(0, kScreenWidth - 40, kScreenHeight, 40);
             
+            // 透明层
+            __weakSelf.transparentView.transform = CGAffineTransformMakeRotation((0.0f * M_PI) / 180.0f);
+            __weakSelf.transparentView.frame = CGRectMake(40, 0, kScreenWidth, kScreenHeight);
+            
             // 控制进度
             __weakSelf.progress.frame = CGRectMake(__weakSelf.videoNowLabel.right + 2, 10, kScreenHeight - 146, 20);
             __weakSelf.videoDurationLabel.frame = CGRectMake(__weakSelf.progress.right + 2, 5,30, 30);
             __weakSelf.fullBtn.frame = CGRectMake(__weakSelf.videoDurationLabel.right + 2, 5, 40, 30);
+            
+            
         }];
         
     } else {
@@ -228,8 +297,12 @@
             __weakSelf.playerView.transform = CGAffineTransformMakeRotation((0.0f * M_PI) / 180.0f);
             __weakSelf.playerView.frame = CGRectMake(0, 0, Video_W,Video_H);
             __weakSelf.playerLayer.frame = CGRectMake(0, 0,  Video_W, Video_H);
+            
             __weakSelf.actionBarView.transform = CGAffineTransformMakeRotation((0.0f * M_PI) / 180.0f);
             __weakSelf.actionBarView.frame = CGRectMake(0, Video_H - 40, Video_W, 40);
+            
+            __weakSelf.transparentView.transform = CGAffineTransformMakeRotation((0.0f * M_PI) / 180.0f);
+            __weakSelf.transparentView.frame = CGRectMake(0, 0, Video_W, Video_H - 40);
             
             // 控制返回原来按钮
             __weakSelf.progress.frame = CGRectMake(__weakSelf.videoNowLabel.right + 2, 10, Video_W - 146, 20);
@@ -242,11 +315,19 @@
 }
 
 #pragma mark - 暂停播放
-- (void)stopPlay:(UIButton *)btn {
+- (void)stopVideo {
     
-    btn.selected =! btn.selected;
+    self.stopBtn.selected = ! self.stopBtn.selected;
     
-    if (btn.selected) {
+    [self setVideoPlayer:self.stopBtn.selected];
+    
+    // 显示底部栏
+    [self showActionBarView];
+}
+
+- (void)setVideoPlayer:(BOOL)isPlayer {
+    
+    if (isPlayer) {
         
         [self.player pause];
         
@@ -256,8 +337,23 @@
         }
         
     } else {
+     
+         [self.player play];
+    }
+}
+
+#pragma mark - 暂停播放
+- (void)stopPlay:(UIButton *)btn {
+    
+    btn.selected =! btn.selected;
+    
+    if (btn.selected) {
         
-        [self.player play];
+        [self setVideoPlayer:btn.selected];
+        
+    } else {
+        
+        [self setVideoPlayer:btn.selected];
     }
 }
 

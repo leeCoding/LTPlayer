@@ -51,7 +51,7 @@
 
 - (void)initView {
     
-    LTPlayerView *playerView = [[LTPlayerView alloc]initWithFrame:CGRectMake(0, 20, Video_W, Video_H) videoURL:@"http://183.63.170.167:9000/lms_data/lms/storage/media/fms/ruheyuxiashugoutong_57a2cbfdb8cc9215161964jchce9eitr.mp4"];
+    LTPlayerView *playerView = [[LTPlayerView alloc]initWithFrame:CGRectMake(0, 20, Video_W, Video_H) videoURL:@"http://zyvideo1.oss-cn-qingdao.aliyuncs.com/zyvd/7c/de/04ec95f4fd42d9d01f63b9683ad0"];
     playerView.delegate = self;
     [self.view addSubview:playerView];
 }
@@ -78,12 +78,11 @@
         
         NSLog(@" 放大");
         
+        
     } else {
         
         NSLog(@" 缩小");
     }
-    
-    
 }
 - (void)initData {
     
