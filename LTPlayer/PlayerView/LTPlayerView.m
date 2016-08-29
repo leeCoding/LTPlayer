@@ -22,6 +22,9 @@
 #define Video_W kScreenWidth
 
 @interface LTPlayerView ()
+{
+    BOOL _isHideActionBar;      /// < 记录是否隐藏
+}
 
 @property (nonatomic,strong)UIView *playerView;             ///< 播放器容器
 @property (nonatomic,strong)AVPlayer *player;               ///< 播放器
@@ -36,7 +39,7 @@
 @property (nonatomic,strong)UIView *actionBarView;          ///< 底部操作栏
 @property (nonatomic,strong)UIButton *fullBtn;              ///< 全屏按钮
 @property (nonatomic,strong)UIView *transparentView;        ///< 操作层
-
+@property (nonatomic,strong)UIImageView *stopImageView;     ///< 暂停播放图片
 @end
 
 @implementation LTPlayerView
@@ -89,6 +92,13 @@
     // 点击屏幕暂停
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(stopVideo)];
     [self.transparentView addGestureRecognizer:tap];
+    
+    // 暂停图片
+    self.stopImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+    self.stopImageView.center = self.transparentView.center;
+    self.stopImageView.image = [UIImage imageNamed:@"icon_play"];
+    self.stopImageView.hidden = YES;
+    [self.transparentView addSubview:self.stopImageView];
     
     // 暂停
     self.stopBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -182,14 +192,18 @@
             if (__weakSelf.fullBtn.selected) {
                 
                 __weakSelf.actionBarView.frame = CGRectMake(0, kScreenWidth, kScreenHeight, 40);
-
+                
             } else {
                 
                 __weakSelf.actionBarView.frame = CGRectMake(0, Video_H, Video_W, 40);
+                
             }
-            
+            __weakSelf.actionBarView.alpha = 0;
+            _isHideActionBar = YES;
+
         }];;
     });
+    
 }
 
 #pragma mark - 显示底部操作栏
@@ -204,16 +218,23 @@
             
             __weakSelf.actionBarView.frame = CGRectMake(0, kScreenWidth - 40, kScreenHeight, 40);
             
-            
         } else {
             
             __weakSelf.actionBarView.frame = CGRectMake(0, Video_H - 40, Video_W, 40);
         }
         
+       __weakSelf.actionBarView.alpha = 0.5;
+        
+        // 设置不隐藏
+        _isHideActionBar = NO;
+
     }];
     
+    
     [self hideActionBarView];
+    
 }
+
 #pragma mark - 快进快退
 - (void)forwardAndRefund:(UISlider *)slider {
     
@@ -285,7 +306,8 @@
             __weakSelf.videoDurationLabel.frame = CGRectMake(__weakSelf.progress.right + 2, 5,30, 30);
             __weakSelf.fullBtn.frame = CGRectMake(__weakSelf.videoDurationLabel.right + 2, 5, 40, 30);
             
-            
+            __weakSelf.stopImageView.transform = CGAffineTransformMakeRotation((90.0f * M_PI) / 180.0f);
+            __weakSelf.stopImageView.center = __weakSelf.center;
         }];
         
     } else {
@@ -309,22 +331,34 @@
             __weakSelf.videoDurationLabel.frame = CGRectMake(__weakSelf.progress.right + 2, 5,30, 30);
             __weakSelf.fullBtn.frame = CGRectMake(__weakSelf.videoDurationLabel.right + 2, 5, 40, 30);
             
+            __weakSelf.stopImageView.transform = CGAffineTransformMakeRotation((0.0f * M_PI) / 180.0f);
+            __weakSelf.stopImageView.center = __weakSelf.transparentView.center;
+
         }];
         
     }
 }
 
-#pragma mark - 暂停播放
+#pragma mark - 点击屏幕暂停播放
 - (void)stopVideo {
     
-    self.stopBtn.selected = ! self.stopBtn.selected;
-    
-    [self setVideoPlayer:self.stopBtn.selected];
-    
-    // 显示底部栏
-    [self showActionBarView];
+    if (_isHideActionBar == YES) {
+     
+        // 显示底部栏
+        [self showActionBarView];
+        
+    } else {
+     
+        self.stopBtn.selected = ! self.stopBtn.selected;
+        
+        [self setVideoPlayer:self.stopBtn.selected];
+        
+        // 显示播放按钮和显示暂停
+        self.stopImageView.hidden = ! self.stopImageView.hidden;
+    }
 }
 
+#pragma mark - 设置播放状态
 - (void)setVideoPlayer:(BOOL)isPlayer {
     
     if (isPlayer) {
@@ -342,7 +376,7 @@
     }
 }
 
-#pragma mark - 暂停播放
+#pragma mark - 暂停播放按钮
 - (void)stopPlay:(UIButton *)btn {
     
     btn.selected =! btn.selected;
@@ -358,6 +392,7 @@
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
     AVPlayerItem *playerItem = (AVPlayerItem *) object;
     
     if ([keyPath isEqualToString:@"status"]) {
@@ -454,6 +489,28 @@
         __weakSelf.progress.value = currentSecond;
     }];
 }
+
+// 开始点击
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    
+}
+
+// 手指移动
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event {
+    [super touchesMoved:touches withEvent:event];
+    
+    CGPoint secondPoint;
+    
+    for(UITouch *touch in event.allTouches) {
+         secondPoint = [touch locationInView:self];
+    }
+    
+    CGFloat verValue = fabs(12 - secondPoint.y);
+    
+    NSLog(@" X轴 %d Y轴%f ver%F",12,secondPoint.y,verValue);
+}
+
 
 - (void)dealloc {
     

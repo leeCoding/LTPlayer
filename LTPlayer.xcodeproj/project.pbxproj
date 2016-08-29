@@ -13,6 +13,8 @@
 		FB3462DF1D378358005735EC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB3462DD1D378358005735EC /* Main.storyboard */; };
 		FB3462E11D378358005735EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB3462E01D378358005735EC /* Assets.xcassets */; };
 		FB3462E41D378358005735EC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB3462E21D378358005735EC /* LaunchScreen.storyboard */; };
+		FB35E84B1D73DBED0053120B /* icon_play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FB35E8491D73DBED0053120B /* icon_play@2x.png */; };
+		FB35E84C1D73DBED0053120B /* icon_play@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = FB35E84A1D73DBED0053120B /* icon_play@3x.png */; };
 		FBF14D401D7014420081B28B /* LTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = FBF14D3F1D7014420081B28B /* LTPlayerView.m */; };
 		FBF14D471D70156A0081B28B /* UIView+Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = FBF14D461D70156A0081B28B /* UIView+Layout.m */; };
 /* End PBXBuildFile section */
@@ -28,6 +30,8 @@
 		FB3462E01D378358005735EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB3462E31D378358005735EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FB3462E51D378358005735EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB35E8491D73DBED0053120B /* icon_play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_play@2x.png"; sourceTree = "<group>"; };
+		FB35E84A1D73DBED0053120B /* icon_play@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_play@3x.png"; sourceTree = "<group>"; };
 		FBF14D3E1D7014420081B28B /* LTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LTPlayerView.h; sourceTree = "<group>"; };
 		FBF14D3F1D7014420081B28B /* LTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LTPlayerView.m; sourceTree = "<group>"; };
 		FBF14D451D70156A0081B28B /* UIView+Layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Layout.h"; sourceTree = "<group>"; };
@@ -72,6 +76,8 @@
 				FB3462DB1D378358005735EC /* ViewController.m */,
 				FB3462DD1D378358005735EC /* Main.storyboard */,
 				FB3462E01D378358005735EC /* Assets.xcassets */,
+				FB35E8491D73DBED0053120B /* icon_play@2x.png */,
+				FB35E84A1D73DBED0053120B /* icon_play@3x.png */,
 				FB3462E21D378358005735EC /* LaunchScreen.storyboard */,
 				FB3462E51D378358005735EC /* Info.plist */,
 				FB3462D41D378358005735EC /* Supporting Files */,
@@ -165,6 +171,8 @@
 				FB3462E41D378358005735EC /* LaunchScreen.storyboard in Resources */,
 				FB3462E11D378358005735EC /* Assets.xcassets in Resources */,
 				FB3462DF1D378358005735EC /* Main.storyboard in Resources */,
+				FB35E84C1D73DBED0053120B /* icon_play@3x.png in Resources */,
+				FB35E84B1D73DBED0053120B /* icon_play@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
