@@ -40,6 +40,8 @@
 @property (nonatomic,strong)UIButton *fullBtn;              ///< 全屏按钮
 @property (nonatomic,strong)UIView *transparentView;        ///< 操作层
 @property (nonatomic,strong)UIImageView *stopImageView;     ///< 暂停播放图片
+@property (nonatomic,strong)UIActivityIndicatorView *loadingView;   ///< 菊花
+
 @end
 
 @implementation LTPlayerView
@@ -75,7 +77,7 @@
 - (void)steupUI {
     
     self.playerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Video_W, Video_H)];
-    self.playerView.backgroundColor = [UIColor whiteColor];
+    self.playerView.backgroundColor = [UIColor blackColor];
     [self addSubview:self.playerView];
     
     // 操作底栏
@@ -86,7 +88,7 @@
     
     // 全屏操作
     self.transparentView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Video_W, Video_H - 40)];
-//    self.transparentView.backgroundColor = [UIColor yellowColor];
+//    self.transparentView.backgroundColor = [UIColor blackColor];
     [self addSubview:self.transparentView];
     
     // 点击屏幕暂停
@@ -99,6 +101,12 @@
     self.stopImageView.image = [UIImage imageNamed:@"icon_play"];
     self.stopImageView.hidden = YES;
     [self.transparentView addSubview:self.stopImageView];
+    
+    // 菊花
+    self.loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    self.loadingView.center = self.center;
+    [self addSubview:self.loadingView];
+    [self.loadingView startAnimating];
     
     // 暂停
     self.stopBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -156,6 +164,8 @@
     
     // loadedTimeRanges属性监听
     [self.playerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];
+    [self.playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
+    [self.playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
     
     // 视屏的总时间
     self.videoDurationLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.progress.right+2, 5,30, 30)];
@@ -230,7 +240,6 @@
 
     }];
     
-    
     [self hideActionBarView];
     
 }
@@ -244,7 +253,6 @@
     
     // 设置当前播放的时间
     self.videoNowLabel.text = [self timeFormatted:(int)(CMTimeGetSeconds(self.playerItem.currentTime))];
-    
 }
 
 #pragma mark - 播放结束通知
@@ -400,6 +408,8 @@
         // 1.已经缓存完毕
         if (playerItem.status == AVPlayerItemStatusReadyToPlay) {
             
+            [self.loadingView stopAnimating];
+
             NSLog(@" 加载完毕可以播放");
             
             // 设置滑块最大值
@@ -418,12 +428,15 @@
         } else if (playerItem.status == AVPlayerItemStatusFailed) {
             
             //2.失败
+            [self.loadingView stopAnimating];
+
             
         } else if (playerItem.status == AVPlayerItemStatusUnknown) {
             
             //3.未知状态
+            [self.loadingView stopAnimating];
+
         }
-        
     
     } else if ([keyPath isEqualToString:@"loadedTimeRanges"]) {
         
@@ -440,6 +453,17 @@
         //NSLog(@" 时间 ++ %@ ",self.timeNow);
         self.videoDurationLabel.text = self.timeNow;
         [self monitoringPlayback:playerItem];
+        
+        [self.loadingView stopAnimating];
+
+    } else if ([keyPath isEqualToString:@"playbackBufferEmpty"]) {
+        
+        [self.loadingView startAnimating];
+        
+        
+    } else if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
+        
+        [self.loadingView stopAnimating];
         
     }  else  {
         
