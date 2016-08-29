@@ -164,7 +164,11 @@
     
     // loadedTimeRanges属性监听
     [self.playerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];
+    
+    // 监听缓存
     [self.playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
+    
+    // 监听缓存
     [self.playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
     
     // 视屏的总时间
@@ -541,6 +545,8 @@
     // 移除监听
     [self removeObserver:self forKeyPath:@"status"];
     [self removeObserver:self forKeyPath:@"loadedTimeRanges"];
+    [self removeObserver:self forKeyPath:@"playbackBufferEmpty"];
+    [self removeObserver:self forKeyPath:@"playbackLikelyToKeepUp"];
     
 }
 @end
