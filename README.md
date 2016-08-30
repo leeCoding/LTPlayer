@@ -25,3 +25,7 @@
 ```
 - (void)zoomInAndZoomOut:(LTPlayerView *)playerView zoomType:(LTZoomInOrZoomOutType)zoomType;
 ```
+### 点击返回按钮回调
+```
+- (void)clickReturnButton:(LTPlayerView *)playerView
+```
