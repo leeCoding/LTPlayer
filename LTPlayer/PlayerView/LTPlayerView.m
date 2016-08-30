@@ -372,6 +372,11 @@ typedef enum : NSUInteger {
         
     } else {
      
+        // 在这几种状态时之前返回
+        if (self.playerStatus == LTPlayerStatusLoadingUnkown) return;
+        if (self.playerStatus == LTPlayerStatusLoadingError) return;
+        if (self.playerStatus == LTPlayerStatusLoading) return;
+        
         self.stopBtn.selected = ! self.stopBtn.selected;
         
         [self setVideoPlayer:self.stopBtn.selected];
@@ -401,6 +406,11 @@ typedef enum : NSUInteger {
 
 #pragma mark - 暂停播放按钮
 - (void)stopPlay:(UIButton *)btn {
+    
+    // 在这几种状态时之前返回
+    if (self.playerStatus == LTPlayerStatusLoadingUnkown) return;
+    if (self.playerStatus == LTPlayerStatusLoadingError) return;
+    if (self.playerStatus == LTPlayerStatusLoading) return;
     
     btn.selected =! btn.selected;
     
