@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "ViewController.h"
+#import "LTListViewController.h"
 
 @interface AppDelegate ()
 
@@ -19,7 +19,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:[ViewController new]];
+    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:[LTListViewController new]];
     self.window.rootViewController = nav;
     return YES;
 }

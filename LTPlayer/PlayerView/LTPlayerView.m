@@ -46,7 +46,10 @@ typedef enum : NSUInteger {
 @property (nonatomic,copy)NSString *timeNow;                ///< 当前的时间
 @property (nonatomic,strong)UISlider *progress;             ///< 滑块
 @property (nonatomic,copy)NSString *videoUrl;               ///< 视屏播放URL
+
+@property (nonatomic,strong)UIView *topBarView;              ///< 顶部栏
 @property (nonatomic,strong)UIView *actionBarView;          ///< 底部操作栏
+
 @property (nonatomic,strong)UIButton *fullBtn;              ///< 全屏按钮
 @property (nonatomic,strong)UIView *transparentView;        ///< 操作层
 @property (nonatomic,strong)UIImageView *stopImageView;     ///< 暂停播放图片
@@ -71,11 +74,13 @@ typedef enum : NSUInteger {
     if (self) {
         
         self.backgroundColor = [UIColor whiteColor];
+        
         self.videoUrl = URL;
         
         [self ininData];
         
         [self initView];
+      
     }
     
     return self;
@@ -103,6 +108,18 @@ typedef enum : NSUInteger {
     self.transparentView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Video_W, Video_H - 40)];
     [self addSubview:self.transparentView];
     
+    // 顶部顶栏
+    self.topBarView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Video_W, 40)];
+    self.topBarView.backgroundColor = [UIColor whiteColor];
+    self.topBarView.alpha = 0.5;
+    [self.transparentView addSubview:self.topBarView];
+    
+    // 返回按钮
+    UIButton *returnBtn = [[UIButton alloc]initWithFrame:CGRectMake(8, 5, 40, 30)];
+    [returnBtn setImage:[UIImage imageNamed:@"BackBtn"] forState:0];
+    [returnBtn addTarget:self action:@selector(returnUpPage) forControlEvents:UIControlEventTouchUpInside];
+    [self.topBarView addSubview:returnBtn];
+    
     // 点击屏幕暂停
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(stopVideo)];
     [self.transparentView addGestureRecognizer:tap];
@@ -116,14 +133,15 @@ typedef enum : NSUInteger {
     
     // 菊花
     self.loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-    self.loadingView.center = self.center;
+    self.loadingView.center = CGPointMake(self.width / 2, self.height / 2);
     [self addSubview:self.loadingView];
+    
     [self.loadingView startAnimating];
     
     // 暂停
     self.stopBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.stopBtn.frame = CGRectMake(0, 5, 40 ,30);
-    [self.stopBtn setTitle:@"暂停" forState:0];
+    [self.stopBtn setTitle:@"暂停" forState:UIControlStateNormal];
     [self.stopBtn setTitle:@"开始" forState:UIControlStateSelected];
     self.stopBtn.selected = NO;
     self.stopBtn.titleLabel.font = [UIFont systemFontOfSize:12];
@@ -137,7 +155,7 @@ typedef enum : NSUInteger {
     self.videoNowLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.stopBtn.right + 2, 5,30, 30)];
     self.videoNowLabel.textColor = [UIColor blackColor];
     self.videoNowLabel.font = [UIFont systemFontOfSize:10];
-    self.videoNowLabel.text = @"1:00";
+    self.videoNowLabel.text = @"00:00";
     self.videoNowLabel.textAlignment = NSTextAlignmentCenter;
     [self.actionBarView addSubview:self.videoNowLabel];
     
@@ -153,6 +171,7 @@ typedef enum : NSUInteger {
     self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
     self.playerLayer.frame = CGRectMake(0, 0, Video_W, Video_H);
     [self.playerView.layer insertSublayer:self.playerLayer atIndex:0];
+    
     [self.player play];
     
     // 控制进度
@@ -184,7 +203,7 @@ typedef enum : NSUInteger {
     [self.playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
     
     // 视屏的总时间
-    self.videoDurationLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.progress.right+2, 5,30, 30)];
+    self.videoDurationLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.progress.right + 2, 5,30, 30)];
     self.videoDurationLabel.textColor = [UIColor blackColor];
     self.videoDurationLabel.font = [UIFont systemFontOfSize:10];
     self.videoDurationLabel.textAlignment = NSTextAlignmentCenter;
@@ -192,7 +211,7 @@ typedef enum : NSUInteger {
     
     // 全屏按钮
     self.fullBtn  = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.fullBtn.frame = CGRectMake(self.videoDurationLabel.right+2, 5, 40, 30) ;
+    self.fullBtn.frame = CGRectMake(self.videoDurationLabel.right + 2, 5, 40, 30);
     [self.fullBtn setTitle:@"全屏" forState:0];
     [self.fullBtn setTitleColor:[UIColor blackColor] forState:0];
     self.fullBtn.titleLabel.font = [UIFont systemFontOfSize:12];
@@ -218,11 +237,12 @@ typedef enum : NSUInteger {
             if (__weakSelf.fullBtn.selected) {
                 
                 __weakSelf.actionBarView.frame = CGRectMake(0, kScreenWidth, kScreenHeight, 40);
-                
+                __weakSelf.topBarView.frame = CGRectMake(kScreenWidth - 40, 0, 40, kScreenHeight);
+
             } else {
                 
                 __weakSelf.actionBarView.frame = CGRectMake(0, Video_H, Video_W, 40);
-                
+                __weakSelf.topBarView.frame = CGRectMake(0, - 40, Video_W, 30);
             }
             __weakSelf.actionBarView.alpha = 0;
             _isHideActionBar = YES;
@@ -243,10 +263,12 @@ typedef enum : NSUInteger {
         if (__weakSelf.fullBtn.selected) {
             
             __weakSelf.actionBarView.frame = CGRectMake(0, kScreenWidth - 40, kScreenHeight, 40);
+            __weakSelf.topBarView.frame = CGRectMake(kScreenWidth - 40 - 40, 0, 40, kScreenHeight);
             
         } else {
             
             __weakSelf.actionBarView.frame = CGRectMake(0, Video_H - 40, Video_W, 40);
+            __weakSelf.topBarView.frame = CGRectMake(0, 0, Video_W, 40);
         }
         
        __weakSelf.actionBarView.alpha = 0.5;
@@ -288,7 +310,7 @@ typedef enum : NSUInteger {
     
     int seconds = totalSeconds % 60;
     int minutes = totalSeconds / 60;
-    NSLog(@" 时间 %@",[NSString stringWithFormat:@"%d:%02d", minutes, seconds]);
+    NSLog(@" 时间 %@", [NSString stringWithFormat:@"%d:%02d", minutes, seconds]);
     
     return [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
 }
@@ -316,6 +338,10 @@ typedef enum : NSUInteger {
             __weakSelf.playerView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight);
             __weakSelf.playerLayer.frame =  CGRectMake(0, 0, kScreenHeight, kScreenWidth);
             
+            // 旋转顶部操作栏
+            __weakSelf.topBarView.transform = CGAffineTransformMakeRotation((90.0f * M_PI) / 180.0f);
+            __weakSelf.topBarView.frame = CGRectMake(kScreenWidth - 40 - 40, 0, 40, kScreenHeight);
+            
             // 旋转底部操作栏
             __weakSelf.actionBarView.transform = CGAffineTransformMakeRotation((0.0f * M_PI) / 180.0f);
             __weakSelf.actionBarView.frame = CGRectMake(0, kScreenWidth - 40, kScreenHeight, 40);
@@ -331,6 +357,8 @@ typedef enum : NSUInteger {
             
             __weakSelf.stopImageView.transform = CGAffineTransformMakeRotation((90.0f * M_PI) / 180.0f);
             __weakSelf.stopImageView.center = __weakSelf.center;
+           
+            __weakSelf.loadingView.center = CGPointMake(kScreenWidth/2, kScreenHeight/2);
         }];
         
     } else {
@@ -342,6 +370,9 @@ typedef enum : NSUInteger {
             __weakSelf.playerView.transform = CGAffineTransformMakeRotation((0.0f * M_PI) / 180.0f);
             __weakSelf.playerView.frame = CGRectMake(0, 0, Video_W,Video_H);
             __weakSelf.playerLayer.frame = CGRectMake(0, 0,  Video_W, Video_H);
+            
+            __weakSelf.topBarView.transform = CGAffineTransformMakeRotation((0.0f * M_PI) / 180.0f);
+            __weakSelf.topBarView.frame = CGRectMake(0, 0, Video_W, 40);
             
             __weakSelf.actionBarView.transform = CGAffineTransformMakeRotation((0.0f * M_PI) / 180.0f);
             __weakSelf.actionBarView.frame = CGRectMake(0, Video_H - 40, Video_W, 40);
@@ -357,6 +388,7 @@ typedef enum : NSUInteger {
             __weakSelf.stopImageView.transform = CGAffineTransformMakeRotation((0.0f * M_PI) / 180.0f);
             __weakSelf.stopImageView.center = __weakSelf.transparentView.center;
 
+            __weakSelf.loadingView.center = __weakSelf.center;
         }];
         
     }
@@ -389,6 +421,7 @@ typedef enum : NSUInteger {
 #pragma mark - 设置播放状态
 - (void)setVideoPlayer:(BOOL)isPlayer {
     
+    
     if (isPlayer) {
         
         [self.player pause];
@@ -398,9 +431,13 @@ typedef enum : NSUInteger {
             [self.delegate stopPlayVideo:self];
         }
         
+        self.playerStatus = LTPlayerStatusStop;
+        
     } else {
      
          [self.player play];
+        
+        self.playerStatus = LTPlayerStatusPlayer;
     }
 }
 
@@ -425,7 +462,6 @@ typedef enum : NSUInteger {
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    
     AVPlayerItem *playerItem = (AVPlayerItem *) object;
     
     if ([keyPath isEqualToString:@"status"]) {
@@ -449,6 +485,7 @@ typedef enum : NSUInteger {
             if ([self.delegate respondsToSelector:@selector(loadComplete:)]) {
                 [self.delegate loadComplete:self];
             }
+            
             self.playerStatus = LTPlayerStatusPlayerEnd;
 
         } else if (playerItem.status == AVPlayerItemStatusFailed) {
@@ -485,6 +522,7 @@ typedef enum : NSUInteger {
         
         [self.loadingView stopAnimating];
         
+        // 防止在中间网速不好时出现播放状态从正在加载改为加载中时出现暂停的问题
         if (self.playerStatus == LTPlayerStatusLoading) {
             
             [self.player play];
@@ -492,13 +530,13 @@ typedef enum : NSUInteger {
         
         self.playerStatus = LTPlayerStatusPlayer;
 
-        NSLog(@"加载中");
+//        NSLog(@"加载中");
         
     } else if ([keyPath isEqualToString:@"playbackBufferEmpty"]) {
         
         [self.loadingView startAnimating];
         
-        NSLog(@"正在加载");
+//        NSLog(@"正在加载");
         
         self.playerStatus = LTPlayerStatusLoading;
         
@@ -506,11 +544,11 @@ typedef enum : NSUInteger {
 
         [self.loadingView stopAnimating];
         
-        NSLog(@"保持加载");
+//        NSLog(@"保持加载");
         
     } else if ([keyPath isEqualToString:@"playbackBufferFull"]) {
         
-        NSLog(@"加载完成");
+//        NSLog(@"加载完成");
         
     }  else  {
         
@@ -561,6 +599,7 @@ typedef enum : NSUInteger {
     }];
 }
 
+#pragma mark - EventMoth
 // 开始点击
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
@@ -582,13 +621,33 @@ typedef enum : NSUInteger {
     NSLog(@" X轴 %d Y轴%f ver%F",12,secondPoint.y,verValue);
 }
 
+#pragma mark - 返回上一页
+- (void)returnUpPage {
+
+    NSLog(@" 啦啦 ");
+    
+    if ([self.delegate respondsToSelector:@selector(clickReturnButton:)]) {
+        [self.delegate clickReturnButton:self];
+    }
+    
+}
+
 - (void)dealloc {
     
     // 移除监听
-    [self removeObserver:self forKeyPath:@"status"];
-    [self removeObserver:self forKeyPath:@"loadedTimeRanges"];
-    [self removeObserver:self forKeyPath:@"playbackBufferEmpty"];
-    [self removeObserver:self forKeyPath:@"playbackLikelyToKeepUp"];
+    [self.player.currentItem cancelPendingSeeks];
+    [self.player.currentItem.asset cancelLoading];
+    [self.player pause];
     
+    [self.playerLayer removeFromSuperlayer];
+    
+    [self.playerItem removeObserver:self forKeyPath:@"status"];
+    [self.playerItem removeObserver:self forKeyPath:@"loadedTimeRanges"];
+    [self.playerItem removeObserver:self forKeyPath:@"playbackBufferEmpty"];
+    [self.playerItem removeObserver:self forKeyPath:@"playbackLikelyToKeepUp"];
+    [self.player replaceCurrentItemWithPlayerItem:nil];
+    
+    NSLog(@" LTPlayerDealloc");
+
 }
 @end

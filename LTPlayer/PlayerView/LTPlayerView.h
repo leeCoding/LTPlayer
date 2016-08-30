@@ -74,4 +74,11 @@ typedef NS_ENUM(NSInteger , LTZoomInOrZoomOutType) {
  */
 - (void)zoomInAndZoomOut:(LTPlayerView *)playerView zoomType:(LTZoomInOrZoomOutType)zoomType;
 
+/**
+ *  点击返回按钮
+ *
+ *  @param playerView self
+ */
+- (void)clickReturnButton:(LTPlayerView *)playerView;
+
 @end
