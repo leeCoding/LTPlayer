@@ -49,8 +49,26 @@
 
 #define Video_W kScreenWidth
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    self.navigationController.navigationBarHidden = YES;
+    
+}
+- (void)viewDidDisappear:(BOOL)animated {
+    
+    self.navigationController.navigationBarHidden = NO;
+    [super viewDidAppear:animated];
+}
+
+#pragma mark - 初始化视图
 - (void)initView {
     
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    /**
+     初始化
+     */
     LTPlayerView *playerView = [[LTPlayerView alloc]initWithFrame:CGRectMake(0, 20, Video_W, Video_H) videoURL:@"http://flv2.bn.netease.com/tvmrepo/2016/8/6/A/EBUHRFU6A/SD/EBUHRFU6A-mobile.mp4"];
     playerView.delegate = self;
     [self.view addSubview:playerView];
@@ -78,16 +96,15 @@
         
         NSLog(@" 放大");
         
-        
     } else {
         
         NSLog(@" 缩小");
     }
 }
+
 - (void)initData {
     
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

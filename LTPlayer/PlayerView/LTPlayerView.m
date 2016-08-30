@@ -21,6 +21,16 @@
 /* 视频宽度 */
 #define Video_W kScreenWidth
 
+typedef enum : NSUInteger {
+    LTPlayerStatusStop,         ///< 暂停
+    LTPlayerStatusPlayerEnd,    ///< 结束
+    LTPlayerStatusPlayer,       ///< 播放中
+    LTPlayerStatusLoading,      ///< 加载中
+    LTPlayerStatusLoadingError, ///< 加载错误
+    LTPlayerStatusLoadingUnkown ///< 未知错误
+    
+} LTPlayerStatus;               ///< 视频播放状态
+
 @interface LTPlayerView ()
 {
     BOOL _isHideActionBar;      /// < 记录是否隐藏
@@ -41,6 +51,7 @@
 @property (nonatomic,strong)UIView *transparentView;        ///< 操作层
 @property (nonatomic,strong)UIImageView *stopImageView;     ///< 暂停播放图片
 @property (nonatomic,strong)UIActivityIndicatorView *loadingView;   ///< 菊花
+@property (nonatomic,assign)LTPlayerStatus playerStatus;            ///< 视屏播放状态
 
 @end
 
@@ -63,7 +74,8 @@
         self.videoUrl = URL;
         
         [self ininData];
-        [self steupUI];
+        
+        [self initView];
     }
     
     return self;
@@ -74,7 +86,8 @@
     
 }
 
-- (void)steupUI {
+#pragma mark - 初始化视图
+- (void)initView {
     
     self.playerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Video_W, Video_H)];
     self.playerView.backgroundColor = [UIColor blackColor];
@@ -88,7 +101,6 @@
     
     // 全屏操作
     self.transparentView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, Video_W, Video_H - 40)];
-//    self.transparentView.backgroundColor = [UIColor blackColor];
     [self addSubview:self.transparentView];
     
     // 点击屏幕暂停
@@ -198,7 +210,7 @@
     
     __weak typeof(self) __weakSelf = self;
     // 等待两秒隐藏
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         [UIView  animateWithDuration:0.5 animations:^{
             
@@ -245,7 +257,6 @@
     }];
     
     [self hideActionBarView];
-    
 }
 
 #pragma mark - 快进快退
@@ -428,18 +439,22 @@
             if ([self.delegate respondsToSelector:@selector(loadComplete:)]) {
                 [self.delegate loadComplete:self];
             }
-            
+            self.playerStatus = LTPlayerStatusPlayerEnd;
+
         } else if (playerItem.status == AVPlayerItemStatusFailed) {
             
             //2.失败
             [self.loadingView stopAnimating];
-
+            NSLog(@"加载失败");
+            
+            self.playerStatus = LTPlayerStatusLoadingError;
             
         } else if (playerItem.status == AVPlayerItemStatusUnknown) {
             
             //3.未知状态
             [self.loadingView stopAnimating];
-
+            self.playerStatus = LTPlayerStatusLoadingUnkown;
+            NSLog(@"未知状态");
         }
     
     } else if ([keyPath isEqualToString:@"loadedTimeRanges"]) {
@@ -459,15 +474,33 @@
         [self monitoringPlayback:playerItem];
         
         [self.loadingView stopAnimating];
+        
+        if (self.playerStatus == LTPlayerStatusLoading) {
+            
+            [self.player play];
+        }
+        
+        self.playerStatus = LTPlayerStatusPlayer;
 
+        NSLog(@"加载中");
+        
     } else if ([keyPath isEqualToString:@"playbackBufferEmpty"]) {
         
         [self.loadingView startAnimating];
         
+        NSLog(@"正在加载");
+        
+        self.playerStatus = LTPlayerStatusLoading;
         
     } else if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
-        
+
         [self.loadingView stopAnimating];
+        
+        NSLog(@"保持加载");
+        
+    } else if ([keyPath isEqualToString:@"playbackBufferFull"]) {
+        
+        NSLog(@"加载完成");
         
     }  else  {
         
@@ -538,7 +571,6 @@
     
     NSLog(@" X轴 %d Y轴%f ver%F",12,secondPoint.y,verValue);
 }
-
 
 - (void)dealloc {
     
