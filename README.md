@@ -9,26 +9,39 @@
     [self.view addSubview:playerView];
 ## 代理说明
 
-### 加载结束回调 
+* 加载结束回调 
+
 ```
 - (void)loadComplete:(LTPlayerView *)playerView;
 ```
-### 播放结束回调  
+* 播放结束回调  
+
 ```
 - (void)playComplete:(LTPlayerView *)playerView;
 ```
-### 暂停播放
+* 暂停播放
+
 ```
 - (void)stopPlayVideo:(LTPlayerView *)playerView;
 ```
-### 视频放大或缩小回调
+* 视频放大或缩小回调
+
 ```
 - (void)zoomInAndZoomOut:(LTPlayerView *)playerView zoomType:(LTZoomInOrZoomOutType)zoomType;
 ```
-### 点击返回按钮回调
+* 点击返回按钮回调
+ 
 ```
 - (void)clickReturnButton:(LTPlayerView *)playerView
 ```
+
+###  关于
+
+如果在使用的过程有什么问题，或有想要增加的功能，你可以这样联系我 ↓：
+
+* Email：<nscode@sina.com>
+* QQ:740712231
+
 
 
 
