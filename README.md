@@ -10,13 +10,18 @@
 ## 代理说明
 
 ### 加载结束回调 
-  -(void)loadComplete:(LTPlayerView *)playerView;
-
+```
+- (void)loadComplete:(LTPlayerView *)playerView;
+```
 ### 播放结束回调  
-  -(void)playComplete:(LTPlayerView *)playerView;
-
+```
+- (void)playComplete:(LTPlayerView *)playerView;
+```
 ### 暂停播放
-  -(void)stopPlayVideo:(LTPlayerView *)playerView;
-
+```
+- (void)stopPlayVideo:(LTPlayerView *)playerView;
+```
 ### 视频放大或缩小回调
-  -(void)zoomInAndZoomOut:(LTPlayerView *)playerView zoomType:(LTZoomInOrZoomOutType)zoomType;
+```
+- (void)zoomInAndZoomOut:(LTPlayerView *)playerView zoomType:(LTZoomInOrZoomOutType)zoomType;
+```
