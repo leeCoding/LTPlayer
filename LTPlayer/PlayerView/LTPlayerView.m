@@ -421,7 +421,6 @@ typedef enum : NSUInteger {
 #pragma mark - 设置播放状态
 - (void)setVideoPlayer:(BOOL)isPlayer {
     
-    
     if (isPlayer) {
         
         [self.player pause];
@@ -576,7 +575,8 @@ typedef enum : NSUInteger {
     
     NSDate *d = [NSDate dateWithTimeIntervalSince1970:second];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    if (second/3600 >= 1) {
+    
+    if (second / 3600 >= 1) {
         [formatter setDateFormat:@"HH:mm:ss"];
     } else {
         [formatter setDateFormat:@"mm:ss"];
@@ -623,8 +623,6 @@ typedef enum : NSUInteger {
 
 #pragma mark - 返回上一页
 - (void)returnUpPage {
-
-    NSLog(@" 啦啦 ");
     
     if ([self.delegate respondsToSelector:@selector(clickReturnButton:)]) {
         [self.delegate clickReturnButton:self];
