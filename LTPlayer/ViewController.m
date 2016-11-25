@@ -26,6 +26,7 @@
 @property (nonatomic,strong)UILabel *videoNowLabel;         ///< 当前时间
 @property (nonatomic,copy)NSString *timeNow;                   ///< 当前的时间
 @property (nonatomic,strong)UISlider *progress;             ///< 滑块
+@property (nonatomic,strong)LTPlayerView *playerView;
 
 @end
 
@@ -71,9 +72,10 @@
      初始化
      */
     
-    LTPlayerView *playerView = [[LTPlayerView alloc]initWithFrame:CGRectMake(0, 20, Video_W, Video_H) videoURL:@"http://flv2.bn.netease.com/tvmrepo/2016/8/6/A/EBUHRFU6A/SD/EBUHRFU6A-mobile.mp4"];
-    playerView.delegate = self;
-    [self.view addSubview:playerView];
+    self.playerView = [[LTPlayerView alloc]initWithFrame:CGRectMake(0, 20, Video_W, Video_H) videoURL:@"http://flv2.bn.netease.com/tvmrepo/2016/8/6/A/EBUHRFU6A/SD/EBUHRFU6A-mobile.mp4"];
+    self.playerView.delegate = self;
+    [self.view addSubview:self.playerView];
+    
 }
 
 #pragma mark - LTPlayerViewDelegate
@@ -107,6 +109,7 @@
 - (void)clickReturnButton:(LTPlayerView *)playerView {
     
     [self.navigationController popViewControllerAnimated:YES];
+    self.playerView = nil;
 }
 
 - (void)initData {

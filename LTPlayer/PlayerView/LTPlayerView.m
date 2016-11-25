@@ -71,6 +71,7 @@ typedef enum : NSUInteger {
 - (instancetype)initWithFrame:(CGRect)frame videoURL:(NSString *)URL {
     
     self = [super initWithFrame:frame];
+    
     if (self) {
         
         self.backgroundColor = [UIColor whiteColor];
@@ -78,8 +79,11 @@ typedef enum : NSUInteger {
         self.videoUrl = URL;
         
         [self ininData];
+        __weak typeof(self) __weakSelf  = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        [self initView];
+            [__weakSelf initView];
+        });
       
     }
     
@@ -297,7 +301,7 @@ typedef enum : NSUInteger {
     
     self.progress.value = 0.0;
     [self.playerLayer.player seekToTime:kCMTimeZero];
-    self.stopBtn.selected = NO;
+    self.stopBtn.selected = YES;
     
     // 播放结束代理
     if ([self.delegate respondsToSelector:@selector(playComplete:)]) {
@@ -602,6 +606,7 @@ typedef enum : NSUInteger {
 #pragma mark - EventMoth
 // 开始点击
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    
     [super touchesBegan:touches withEvent:event];
     
 }
@@ -627,15 +632,21 @@ typedef enum : NSUInteger {
     if ([self.delegate respondsToSelector:@selector(clickReturnButton:)]) {
         [self.delegate clickReturnButton:self];
     }
+}
+
+- (void)willRemoveSubview:(UIView *)subview {
+    
+    NSLog(@"将要从移除父视图");
     
 }
 
 - (void)dealloc {
     
+    [self.player pause];
+
     // 移除监听
     [self.player.currentItem cancelPendingSeeks];
     [self.player.currentItem.asset cancelLoading];
-    [self.player pause];
     
     [self.playerLayer removeFromSuperlayer];
     
