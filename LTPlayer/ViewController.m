@@ -67,7 +67,6 @@
 - (void)initView {
     
     self.view.backgroundColor = [UIColor whiteColor];
-    
     /**
      初始化
      */

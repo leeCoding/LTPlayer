@@ -55,7 +55,7 @@ typedef enum : NSUInteger {
 @property (nonatomic,strong)UIImageView *stopImageView;     ///< 暂停播放图片
 @property (nonatomic,strong)UIActivityIndicatorView *loadingView;   ///< 菊花
 @property (nonatomic,assign)LTPlayerStatus playerStatus;            ///< 视屏播放状态
-
+@property (nonatomic,strong)UIProgressView *progressView;   ///< 设置缓冲进度
 @end
 
 @implementation LTPlayerView
@@ -78,21 +78,14 @@ typedef enum : NSUInteger {
         
         self.videoUrl = URL;
         
-        [self ininData];
         __weak typeof(self) __weakSelf  = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [__weakSelf initView];
         });
-      
     }
     
     return self;
-}
-
-#pragma mark - 初始化数据
-- (void)ininData {
-    
 }
 
 #pragma mark - 初始化视图
@@ -178,17 +171,34 @@ typedef enum : NSUInteger {
     
     [self.player play];
     
+    
+    
     // 控制进度
-    self.progress = [[UISlider alloc]initWithFrame:CGRectMake(self.videoNowLabel.right + 2, 10, Video_W - 146, 20)];
+    self.progress = [[UISlider alloc]initWithFrame:CGRectMake(self.videoNowLabel.right + 2, 11, Video_W - 146, 20)];
     self.progress.alpha = 1;
     self.progress.thumbTintColor = [UIColor blackColor];
     self.progress.minimumValue = 0;
     [self.progress addTarget:self action:@selector(forwardAndRefund:) forControlEvents:UIControlEventValueChanged];
+    self.progress.minimumTrackTintColor = [UIColor greenColor];
+    self.progress.maximumTrackTintColor = [UIColor clearColor];
+    self.progress.backgroundColor = [UIColor clearColor];
+
+    NSLog(@" 进度高度%f",self.progress.height);
+    
+    // 缓冲进度
+    self.progressView = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
+    self.progressView.frame = CGRectMake(0, 0, Video_W - 146, self.progress.height);
+    self.progressView.center = CGPointMake(self.progress.center.x, self.progress.center.y);
+    
+    self.progressView.progressTintColor = [UIColor clearColor];
+    self.progressView.trackTintColor    = [UIColor lightGrayColor];
+    [self.progressView setProgress:0.0 animated:NO];
+    [self.actionBarView addSubview:self.progressView];
     [self.actionBarView addSubview:self.progress];
+
     
     NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
                                                      forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
-    
     AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:URL options:opts];
     float second = 0;
     second = urlAsset.duration.value/urlAsset.duration.timescale;
@@ -225,7 +235,7 @@ typedef enum : NSUInteger {
     //播放结束通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
     
-    [self hideActionBarView];
+//    [self hideActionBarView];
 }
 
 #pragma mark - 隐藏底部操作栏
@@ -356,6 +366,9 @@ typedef enum : NSUInteger {
             
             // 控制进度
             __weakSelf.progress.frame = CGRectMake(__weakSelf.videoNowLabel.right + 2, 10, kScreenHeight - 146, 20);
+            __weakSelf.progressView.frame = __weakSelf.progress.frame;
+            __weakSelf.progressView.center = CGPointMake(__weakSelf.progress.center.x, __weakSelf.progress.center.y);
+
             __weakSelf.videoDurationLabel.frame = CGRectMake(__weakSelf.progress.right + 2, 5,30, 30);
             __weakSelf.fullBtn.frame = CGRectMake(__weakSelf.videoDurationLabel.right + 2, 5, 40, 30);
             
@@ -386,6 +399,9 @@ typedef enum : NSUInteger {
             
             // 控制返回原来按钮
             __weakSelf.progress.frame = CGRectMake(__weakSelf.videoNowLabel.right + 2, 10, Video_W - 146, 20);
+            __weakSelf.progressView.frame = __weakSelf.progress.frame;
+            __weakSelf.progressView.center = CGPointMake(__weakSelf.progress.center.x, __weakSelf.progress.center.y);
+            
             __weakSelf.videoDurationLabel.frame = CGRectMake(__weakSelf.progress.right + 2, 5,30, 30);
             __weakSelf.fullBtn.frame = CGRectMake(__weakSelf.videoDurationLabel.right + 2, 5, 40, 30);
             
@@ -434,12 +450,13 @@ typedef enum : NSUInteger {
             [self.delegate stopPlayVideo:self];
         }
         
+        // 暂停之后置初始状态
         self.playerStatus = LTPlayerStatusStop;
+        self.stopBtn.selected = YES;
         
     } else {
      
-         [self.player play];
-        
+        [self.player play];
         self.playerStatus = LTPlayerStatusPlayer;
     }
 }
@@ -453,15 +470,7 @@ typedef enum : NSUInteger {
     if (self.playerStatus == LTPlayerStatusLoading) return;
     
     btn.selected =! btn.selected;
-    
-    if (btn.selected) {
-        
-        [self setVideoPlayer:btn.selected];
-        
-    } else {
-        
-        [self setVideoPlayer:btn.selected];
-    }
+    [self setVideoPlayer:btn.selected];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -532,14 +541,23 @@ typedef enum : NSUInteger {
         }
         
         self.playerStatus = LTPlayerStatusPlayer;
-
-//        NSLog(@"加载中");
+        
+        // 计算缓冲进度
+        NSTimeInterval timeInterval = [self availableDuration];
+        CMTime duration             = _playerItem.duration;
+        CGFloat totalDuration       = CMTimeGetSeconds(duration);
+        
+        //缓冲颜色
+        self.progressView.progressTintColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.7];
+        [self.progressView setProgress:timeInterval / totalDuration animated:NO];
+        
+        NSLog(@"加载中");
         
     } else if ([keyPath isEqualToString:@"playbackBufferEmpty"]) {
         
         [self.loadingView startAnimating];
         
-//        NSLog(@"正在加载");
+        NSLog(@"正在加载");
         
         self.playerStatus = LTPlayerStatusLoading;
         
@@ -547,16 +565,26 @@ typedef enum : NSUInteger {
 
         [self.loadingView stopAnimating];
         
-//        NSLog(@"保持加载");
+        NSLog(@"保持加载");
         
     } else if ([keyPath isEqualToString:@"playbackBufferFull"]) {
         
-//        NSLog(@"加载完成");
+        NSLog(@"加载完成");
         
     }  else  {
         
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
+}
+
+- (NSTimeInterval)getAvailableDuration {
+    
+    NSArray *loadedTimeRanges = [_playerItem loadedTimeRanges];
+    CMTimeRange timeRange     = [loadedTimeRanges.firstObject CMTimeRangeValue];// 获取缓冲区域
+    float startSeconds        = CMTimeGetSeconds(timeRange.start);
+    float durationSeconds     = CMTimeGetSeconds(timeRange.duration);
+    NSTimeInterval result     = startSeconds + durationSeconds;// 计算缓冲总进度
+    return result;
 }
 
 // 获取总的时间
@@ -594,7 +622,6 @@ typedef enum : NSUInteger {
     
     __weak typeof(self) __weakSelf = self;
     [self.playerLayer.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:NULL usingBlock:^(CMTime time) {
-        
         CGFloat currentSecond = playerItem.currentTime.value/playerItem.currentTime.timescale;// 计算当前在第几秒
         
         NSString *timeString = [__weakSelf convertTime:currentSecond];
