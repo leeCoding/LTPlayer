@@ -123,7 +123,7 @@ typedef enum : NSUInteger {
     
     // 暂停图片
     self.stopImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
-    self.stopImageView.center = self.transparentView.center;
+    self.stopImageView.center = CGPointMake(self.transparentView.center.x, self.transparentView.center.y+15);
     self.stopImageView.image = [UIImage imageNamed:@"icon_play"];
     self.stopImageView.hidden = YES;
     [self.transparentView addSubview:self.stopImageView];
@@ -169,9 +169,7 @@ typedef enum : NSUInteger {
     self.playerLayer.frame = CGRectMake(0, 0, Video_W, Video_H);
     [self.playerView.layer insertSublayer:self.playerLayer atIndex:0];
     
-    [self.player play];
-    
-    
+//    [self.player play];
     
     // 控制进度
     self.progress = [[UISlider alloc]initWithFrame:CGRectMake(self.videoNowLabel.right + 2, 11, Video_W - 146, 20)];
@@ -183,7 +181,6 @@ typedef enum : NSUInteger {
     self.progress.maximumTrackTintColor = [UIColor clearColor];
     self.progress.backgroundColor = [UIColor clearColor];
 
-    NSLog(@" 进度高度%f",self.progress.height);
     
     // 缓冲进度
     self.progressView = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
@@ -197,24 +194,13 @@ typedef enum : NSUInteger {
     [self.actionBarView addSubview:self.progress];
 
     
-    NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
-                                                     forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
-    AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:URL options:opts];
-    float second = 0;
-    second = urlAsset.duration.value/urlAsset.duration.timescale;
-    NSLog(@"movie duration : %f", second);
+//    NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO]
+//                                                     forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
+//    AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:URL options:opts];
+//    float second = 0;
+//    second = urlAsset.duration.value/urlAsset.duration.timescale;
+//    NSLog(@"movie duration : %f", second);
     
-    // 监听播放资源的状态
-    [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
-    
-    // loadedTimeRanges属性监听
-    [self.playerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];
-    
-    // 监听缓存
-    [self.playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
-    
-    // 监听缓存
-    [self.playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
     
     // 视屏的总时间
     self.videoDurationLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.progress.right + 2, 5,30, 30)];
@@ -232,10 +218,30 @@ typedef enum : NSUInteger {
     [self.fullBtn addTarget:self action:@selector(fullEvent:) forControlEvents:UIControlEventTouchUpInside];
     [self.actionBarView addSubview:self.fullBtn];
     
+    // 添加监听
+    [self addPlayerItemObserver];
+    
+    // 添加自动隐藏操作栏
+    [self hideActionBarView];
+}
+
+#pragma mark - 添加播放监听
+- (void)addPlayerItemObserver {
+ 
+    // 监听播放资源的状态
+    [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+    
+    // loadedTimeRanges属性监听
+    [self.playerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];
+    
+    // 监听缓存
+    [self.playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:nil];
+    
+    // 监听缓存
+    [self.playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
+    
     //播放结束通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-    
-//    [self hideActionBarView];
 }
 
 #pragma mark - 隐藏底部操作栏
@@ -374,7 +380,6 @@ typedef enum : NSUInteger {
             
             __weakSelf.stopImageView.transform = CGAffineTransformMakeRotation((90.0f * M_PI) / 180.0f);
             __weakSelf.stopImageView.center = __weakSelf.center;
-           
             __weakSelf.loadingView.center = CGPointMake(kScreenWidth/2, kScreenHeight/2);
         }];
         
@@ -406,7 +411,7 @@ typedef enum : NSUInteger {
             __weakSelf.fullBtn.frame = CGRectMake(__weakSelf.videoDurationLabel.right + 2, 5, 40, 30);
             
             __weakSelf.stopImageView.transform = CGAffineTransformMakeRotation((0.0f * M_PI) / 180.0f);
-            __weakSelf.stopImageView.center = __weakSelf.transparentView.center;
+            __weakSelf.stopImageView.center = CGPointMake(__weakSelf.transparentView.center.x,__weakSelf.transparentView.center.y + 15);
 
             __weakSelf.loadingView.center = __weakSelf.center;
         }];
@@ -459,6 +464,7 @@ typedef enum : NSUInteger {
         [self.player play];
         self.playerStatus = LTPlayerStatusPlayer;
     }
+    
 }
 
 #pragma mark - 暂停播放按钮
@@ -471,6 +477,8 @@ typedef enum : NSUInteger {
     
     btn.selected =! btn.selected;
     [self setVideoPlayer:btn.selected];
+    self.stopImageView.hidden = ! self.stopImageView.hidden;
+
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
